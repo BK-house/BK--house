@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BK House</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f7f7f7;
+  color:#222;
+}
+header{
+  background:#1769aa;
+  color:white;
+  padding:18px;
+  text-align:center;
+}
+.logo{
+  font-size:32px;
+  font-weight:bold;
+}
+.subtitle{
+  margin-top:5px;
+  font-size:14px;
+}
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:18px;
+}
+.search{
+  width:100%;
+  padding:14px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  font-size:16px;
+  margin-bottom:15px;
+}
+.categories{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  margin-bottom:20px;
+}
+.categories button{
+  border:0;
+  background:white;
+  padding:10px 15px;
+  border-radius:20px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.categories button.active{
+  background:#1769aa;
+  color:white;
+}
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+}
+.product{
+  background:white;
+  border-radius:14px;
+  padding:15px;
+  box-shadow:0 2px 8px #0001;
+}
+.product h3{
+  margin:8px 0;
+}
+.price{
+  color:#1769aa;
+  font-weight:bold;
+  font-size:19px;
+}
+.stock{
+  color:#666;
+  font-size:14px;
+  margin:8px 0;
+}
+.order{
+  width:100%;
+  padding:12px;
+  border:0;
+  border-radius:8px;
+  background:#1769aa;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+.order:active{
+  transform:scale(.98);
+}
+.empty{
+  text-align:center;
+  padding:30px;
+}
+footer{
+  text-align:center;
+  padding:25px;
+  color:#777;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">BK</div>
+  <div>BK House</div>
+  <div class="subtitle">La signature du bon goût</div>
+</header>
+
+<div class="container">
+
+<input
+  id="search"
+  class="search"
+  type="search"
+  placeholder="Rechercher un article..."
+>
+
+<div class="categories">
+  <button class="active" onclick="filterCategory('Tout',this)">Tout</button>
+  <button onclick="filterCategory('Homme',this)">Homme</button>
+  <button onclick="filterCategory('Femme',this)">Femme</button>
+  <button onclick="filterCategory('Accessoires',this)">Accessoires</button>
+</div>
+
+<div id="products" class="products"></div>
+
+</div>
+
+<footer>
+  © 2026 BK House
+</footer>
+
+<script>
+
+const products = [
+  {
+    name:"T-shirt oversize",
+    price:3500,
+    stock:50,
+    category:"Homme"
+  },
+  {
+    name:"Top femme",
+    price:3000,
+    stock:30,
+    category:"Femme"
+  },
+  {
+    name:"Jean homme",
+    price:4500,
+    stock:25,
+    category:"Homme"
+  },
+  {
+    name:"Sac tendance",
+    price:5000,
+    stock:20,
+    category:"Accessoires"
+  }
+];
+
+let currentCategory = "Tout";
+
+function displayProducts(){
+
+  const search =
+    document.getElementById("search").value.toLowerCase();
+
+  const container =
+    document.getElementById("products");
+
+  const filtered = products.filter(p => {
+
+    const matchesCategory =
+      currentCategory === "Tout" ||
+      p.category === currentCategory;
+
+    const matchesSearch =
+      p.name.toLowerCase().includes(search);
+
+    return matchesCategory && matchesSearch;
+  });
+
+  if(filtered.length === 0){
+    container.innerHTML =
+      '<div class="empty">Aucun article trouvé.</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(p => `
+
+    <article class="product">
+
+      <h3>${p.name}</h3>
+
+      <div class="price">
+        ${p.price.toLocaleString("fr-FR")} FCFA
+      </div>
+
+      <div class="stock">
+        Stock : ${p.stock}
+      </div>
+
+      <button
+        class="order"
+        onclick="orderProduct('${p.name}')">
+        Commander
+      </button>
+
+    </article>
+
+  `).join("");
+}
+
+function filterCategory(category,button){
+
+  currentCategory = category;
+
+  document
+    .querySelectorAll(".categories button")
+    .forEach(b => b.classList.remove("active"));
+
+  button.classList.add("active");
+
+  displayProducts();
+}
+
+function orderProduct(name){
+
+  alert(
+    "Commande : " +
+    name +
+    " ajoutée. Nous connecterons cette commande à Supabase ensuite."
+  );
+}
+
+document
+  .getElementById("search")
+  .addEventListener("input",displayProducts);
+
+displayProducts();
+
+</script>
+
+</body>
+</html>
