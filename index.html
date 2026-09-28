@@ -273,7 +273,7 @@ async function orderProduct(name,price){
 
   try{
 
-    const orderId=crypto.randomUUID();
+    const orderId=Date.now();
 
     const orderResponse = await fetch(
       SUPABASE_URL + "/rest/v1/orders",
@@ -339,7 +339,6 @@ async function orderProduct(name,price){
 
   }
 }
-
 displayProducts(products);
 </script>
 
