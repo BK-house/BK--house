@@ -263,7 +263,6 @@ function searchProducts(){
 
   displayProducts(filtered);
 }
-
 async function orderProduct(name,price){
 
   const buttons=document.querySelectorAll(".product button");
@@ -285,18 +284,17 @@ async function orderProduct(name,price){
           "Prefer":"return=representation"
         },
         body:JSON.stringify({
-          total:price
+          total:price,
+          status:"pending"
         })
       }
     );
 
     if(!orderResponse.ok){
-      const errorText=await orderResponse.text();
-      throw new Error(errorText);
+      throw new Error(await orderResponse.text());
     }
 
     const orderData=await orderResponse.json();
-
     const orderId=orderData[0].id;
 
     const itemResponse = await fetch(
@@ -313,14 +311,14 @@ async function orderProduct(name,price){
           order_id:orderId,
           product_id:null,
           quantity:1,
-          price:price
+          price:price,
+          product_name:name
         })
       }
     );
 
     if(!itemResponse.ok){
-      const errorText=await itemResponse.text();
-      throw new Error(errorText);
+      throw new Error(await itemResponse.text());
     }
 
     alert(
@@ -345,8 +343,6 @@ async function orderProduct(name,price){
 
   }
 }
-
-displayProducts(products);
 </script>
 
 </body>
