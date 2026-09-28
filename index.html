@@ -7,31 +7,37 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial,sans-serif;
   background:#f7f7f7;
   color:#222;
 }
+
 header{
   background:#1769aa;
   color:white;
   padding:18px;
   text-align:center;
 }
+
 .logo{
   font-size:32px;
   font-weight:bold;
 }
+
 .subtitle{
   margin-top:5px;
   font-size:14px;
 }
+
 .container{
   max-width:900px;
   margin:auto;
   padding:18px;
 }
+
 .search{
   width:100%;
   padding:14px;
@@ -40,12 +46,14 @@ header{
   font-size:16px;
   margin-bottom:15px;
 }
+
 .categories{
   display:flex;
   gap:8px;
   overflow-x:auto;
   margin-bottom:20px;
 }
+
 .categories button{
   border:0;
   background:white;
@@ -54,34 +62,41 @@ header{
   cursor:pointer;
   white-space:nowrap;
 }
+
 .categories button.active{
   background:#1769aa;
   color:white;
 }
+
 .products{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:15px;
 }
+
 .product{
   background:white;
   border-radius:14px;
   padding:15px;
   box-shadow:0 2px 8px #0001;
 }
+
 .product h3{
   margin:8px 0;
 }
+
 .price{
   color:#1769aa;
   font-weight:bold;
   font-size:19px;
 }
+
 .stock{
   color:#666;
   font-size:14px;
   margin:8px 0;
 }
+
 .order{
   width:100%;
   padding:12px;
@@ -92,13 +107,12 @@ header{
   font-weight:bold;
   cursor:pointer;
 }
-.order:active{
-  transform:scale(.98);
-}
+
 .empty{
   text-align:center;
   padding:30px;
 }
+
 footer{
   text-align:center;
   padding:25px;
@@ -108,6 +122,8 @@ footer{
 </head>
 
 <body>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <header>
   <div class="logo">BK</div>
@@ -170,6 +186,15 @@ const products = [
 
 let currentCategory = "Tout";
 
+const SUPABASE_URL = "https://guutggkqdmolyklhdfrw.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_rpU7ZA6E0q2d7nzp97K6yg_FpoFjRNi";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 function displayProducts(){
 
   const search =
@@ -221,6 +246,29 @@ function displayProducts(){
   `).join("");
 }
 
+async function orderProduct(name){
+
+  const product = products.find(p => p.name === name);
+
+  const { error } = await supabase
+    .from("orders")
+    .insert({
+      total: product.price
+    });
+
+  if(error){
+    alert("Erreur lors de l'enregistrement de la commande.");
+    console.error(error);
+    return;
+  }
+
+  alert(
+    "Commande de " +
+    name +
+    " enregistrée avec succès ❤️"
+  );
+}
+
 function filterCategory(category,button){
 
   currentCategory = category;
@@ -232,15 +280,6 @@ function filterCategory(category,button){
   button.classList.add("active");
 
   displayProducts();
-}
-
-function orderProduct(name){
-
-  alert(
-    "Commande : " +
-    name +
-    " ajoutée. Nous connecterons cette commande à Supabase ensuite."
-  );
 }
 
 document
