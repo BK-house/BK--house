@@ -329,11 +329,9 @@ async function orderProduct(name,price){
   }catch(error){
 
     console.error(error);
+    alert("ERREUR : " + error.message);
 
-    alert(
-      alert("ERREUR : " + error.message);
-
-  }finally{
+}finally{
 
     buttons.forEach(button=>{
       button.disabled=false;
