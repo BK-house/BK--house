@@ -331,9 +331,7 @@ async function orderProduct(name,price){
     console.error(error);
 
     alert(
-      "La commande n'a pas pu être enregistrée. "+
-      "Vérifie la connexion à Supabase."
-    );
+      alert("ERREUR : " + error.message);
 
   }finally{
 
