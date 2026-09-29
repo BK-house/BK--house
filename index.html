@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -81,6 +80,37 @@ header{
   font-size:14px;
 }
 
+.dashboard{
+  background:white;
+  margin:15px;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.dashboard h2{
+  color:#1769aa;
+  margin-top:0;
+}
+
+.goalBox{
+  background:#eef6fc;
+  border-radius:10px;
+  padding:15px;
+  margin-top:10px;
+}
+
+.goalNumber{
+  font-size:28px;
+  font-weight:bold;
+  color:#1769aa;
+}
+
+.goalMessage{
+  margin-top:5px;
+  font-size:14px;
+}
+
 .search{
   padding:15px;
   background:white;
@@ -108,6 +138,7 @@ header{
   padding:10px 16px;
   border-radius:20px;
   cursor:pointer;
+  white-space:nowrap;
 }
 
 .categories button.active{
@@ -143,7 +174,14 @@ header{
 .stock{
   font-size:13px;
   color:#666;
+  margin-bottom:5px;
+}
+
+.points{
+  font-size:13px;
+  color:#1769aa;
   margin-bottom:10px;
+  font-weight:bold;
 }
 
 .product button{
@@ -154,6 +192,24 @@ header{
   padding:10px;
   border-radius:7px;
   cursor:pointer;
+}
+
+.product button:disabled{
+  background:#aaa;
+  cursor:not-allowed;
+}
+
+#ordersSection{
+  padding:15px;
+  background:white;
+  margin-top:15px;
+}
+
+.orderCard{
+  border:1px solid #ddd;
+  border-radius:8px;
+  padding:12px;
+  margin-bottom:10px;
 }
 
 footer{
@@ -186,29 +242,13 @@ footer{
 
     <h2>Créer mon compte vendeur</h2>
 
-    <input
-      type="text"
-      id="nameInput"
-      placeholder="Nom et prénom"
-    >
+    <input type="text" id="nameInput" placeholder="Nom et prénom">
 
-    <input
-      type="text"
-      id="phoneInput"
-      placeholder="Numéro WhatsApp"
-    >
+    <input type="text" id="phoneInput" placeholder="Numéro WhatsApp">
 
-    <input
-      type="email"
-      id="emailInput"
-      placeholder="Adresse email"
-    >
+    <input type="email" id="emailInput" placeholder="Adresse email">
 
-    <input
-      type="password"
-      id="passwordInput"
-      placeholder="Mot de passe"
-    >
+    <input type="password" id="passwordInput" placeholder="Mot de passe">
 
     <button onclick="signUp()">
       Créer mon compte
@@ -218,17 +258,9 @@ footer{
 
     <h2>Déjà un compte ?</h2>
 
-    <input
-      type="email"
-      id="loginEmail"
-      placeholder="Adresse email"
-    >
+    <input type="email" id="loginEmail" placeholder="Adresse email">
 
-    <input
-      type="password"
-      id="loginPassword"
-      placeholder="Mot de passe"
-    >
+    <input type="password" id="loginPassword" placeholder="Mot de passe">
 
     <button onclick="signIn()">
       Se connecter
@@ -252,26 +284,76 @@ footer{
 
 </div>
 
+<!-- OBJECTIF -->
+<div class="dashboard" id="dashboard" style="display:none">
+
+  <h2>Mon objectif</h2>
+
+  <div class="goalBox">
+
+    <div>
+      Ventes aujourd'hui
+    </div>
+
+    <div class="goalNumber" id="todaySales">
+      0 / 3
+    </div>
+
+    <div class="goalMessage" id="goalMessage">
+      Encore 3 ventes pour atteindre ton objectif.
+    </div>
+
+    <div style="margin-top:12px">
+      Points : <strong id="dashboardPoints">0</strong>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- RECHERCHE -->
 <div class="search">
+
   <input
     type="text"
     id="searchInput"
     placeholder="Rechercher un article..."
     oninput="searchProducts()"
   >
+
 </div>
 
+<!-- CATEGORIES -->
 <div class="categories">
-  <button class="active" onclick="filterProducts('Tout',this)">Tout</button>
-  <button onclick="filterProducts('Homme',this)">Homme</button>
-  <button onclick="filterProducts('Femme',this)">Femme</button>
-  <button onclick="filterProducts('Accessoires',this)">Accessoires</button>
+
+  <button
+    class="active"
+    onclick="filterProducts('Tout',this)">
+    Tout
+  </button>
+
+  <button
+    onclick="filterProducts('Homme',this)">
+    Homme
+  </button>
+
+  <button
+    onclick="filterProducts('Femme',this)">
+    Femme
+  </button>
+
+  <button
+    onclick="filterProducts('Accessoires',this)">
+    Accessoires
+  </button>
+
 </div>
 
+<!-- PRODUITS -->
 <div class="products" id="products"></div>
 
-<div id="ordersSection"
-     style="padding:15px;background:white;margin-top:15px;">
+<!-- COMMANDES -->
+<div id="ordersSection">
 
   <h2>Mes commandes</h2>
 
@@ -299,61 +381,43 @@ localStorage.getItem("bk_access_token");
 let currentUser =
 JSON.parse(localStorage.getItem("bk_user") || "null");
 
-const products = [
+let products = [];
 
-  {
-    name:"T-shirt oversize",
-    price:3500,
-    stock:50,
-    category:"Homme"
-  },
+let currentCategory = "Tout";
 
-  {
-    name:"Top femme",
-    price:3000,
-    stock:30,
-    category:"Femme"
-  },
 
-  {
-    name:"Jean homme",
-    price:4500,
-    stock:25,
-    category:"Homme"
-  },
-
-  {
-    name:"Jupe bohème",
-    price:3500,
-    stock:20,
-    category:"Femme"
-  },
-
-  {
-    name:"Sac tendance",
-    price:5000,
-    stock:15,
-    category:"Accessoires"
-  }
-
-];
-
-let currentCategory="Tout";
-
+/* =========================
+   OUTILS
+========================= */
 
 function formatPrice(price){
 
-  return price.toLocaleString("fr-FR")+" FCFA";
+  return Number(price).toLocaleString("fr-FR")+" FCFA";
 
 }
 
 
 function message(text){
 
-  document.getElementById("accountMessage").innerText=text;
+  document.getElementById("accountMessage").innerText = text;
 
 }
 
+
+function authHeaders(){
+
+  return {
+    "apikey":SUPABASE_KEY,
+    "Authorization":"Bearer "+accessToken,
+    "Content-Type":"application/json"
+  };
+
+}
+
+
+/* =========================
+   INSCRIPTION
+========================= */
 
 async function signUp(){
 
@@ -391,13 +455,16 @@ async function signUp(){
         },
 
         body:JSON.stringify({
+
           email:email,
+
           password:password,
 
           data:{
             name:name,
             phone:phone
           }
+
         })
       }
     );
@@ -417,9 +484,11 @@ async function signUp(){
 
     if(data.session){
 
-      accessToken=data.session.access_token;
+      accessToken =
+        data.session.access_token;
 
-      currentUser=data.user;
+      currentUser =
+        data.user;
 
       localStorage.setItem(
         "bk_access_token",
@@ -434,6 +503,12 @@ async function signUp(){
       await saveProfile(name,phone);
 
       showLoggedIn();
+
+      await loadProducts();
+
+      await loadOrders();
+
+      await updateDashboard();
 
       message("Compte créé avec succès !");
 
@@ -455,6 +530,10 @@ async function signUp(){
 
 }
 
+
+/* =========================
+   CONNEXION
+========================= */
 
 async function signIn(){
 
@@ -505,9 +584,11 @@ async function signIn(){
 
     }
 
-    accessToken=data.access_token;
+    accessToken =
+      data.access_token;
 
-    currentUser=data.user;
+    currentUser =
+      data.user;
 
     localStorage.setItem(
       "bk_access_token",
@@ -523,7 +604,11 @@ async function signIn(){
 
     await loadProfile();
 
+    await loadProducts();
+
     await loadOrders();
+
+    await updateDashboard();
 
     message("Connexion réussie !");
 
@@ -537,6 +622,10 @@ async function signIn(){
 
 }
 
+
+/* =========================
+   PROFIL
+========================= */
 
 async function saveProfile(name,phone){
 
@@ -560,11 +649,17 @@ async function saveProfile(name,phone){
         },
 
         body:JSON.stringify({
+
           id:currentUser.id,
+
           name:name,
+
           phone:phone,
+
           role:"vendeur",
+
           points:0
+
         })
       }
     );
@@ -597,16 +692,19 @@ async function loadProfile(){
   try{
 
     const response = await fetch(
+
       SUPABASE_URL +
-      "/rest/v1/profiles?id=eq." +
-      currentUser.id +
+      "/rest/v1/profiles?id=eq."+
+      currentUser.id+
       "&select=*",
+
       {
         headers:{
           "apikey":SUPABASE_KEY,
           "Authorization":"Bearer "+accessToken
         }
       }
+
     );
 
     if(!response.ok){
@@ -614,16 +712,33 @@ async function loadProfile(){
       return;
     }
 
-    const profiles = await response.json();
+    const profiles =
+      await response.json();
 
     if(profiles.length > 0){
 
-      const profile=profiles[0];
+      const profile =
+        profiles[0];
 
-      document.getElementById("userInfo").innerHTML=
-        "<strong>"+(profile.name || "Vendeur")+"</strong><br>"+
-        "WhatsApp : "+(profile.phone || "Non renseigné")+"<br>"+
-        "Points : "+(profile.points || 0);
+      const points =
+        Number(profile.points) || 0;
+
+      document.getElementById("userInfo").innerHTML =
+
+        "<strong>"+
+        (profile.name || "Vendeur")+
+        "</strong><br>"+
+
+        "WhatsApp : "+
+        (profile.phone || "Non renseigné")+
+        "<br>"+
+
+        "Points : "+
+        points;
+
+      document.getElementById(
+        "dashboardPoints"
+      ).innerText = points;
 
     }
 
@@ -638,15 +753,27 @@ async function loadProfile(){
 
 function showLoggedIn(){
 
-  document.getElementById("loggedOut").style.display="none";
+  document.getElementById(
+    "loggedOut"
+  ).style.display="none";
 
-  document.getElementById("loggedIn").style.display="block";
+  document.getElementById(
+    "loggedIn"
+  ).style.display="block";
+
+  document.getElementById(
+    "dashboard"
+  ).style.display="block";
 
   if(currentUser){
 
-    document.getElementById("userInfo").innerHTML=
+    document.getElementById(
+      "userInfo"
+    ).innerHTML =
+
       "<strong>Compte connecté</strong><br>"+
       currentUser.email;
+
   }
 
 }
@@ -654,18 +781,30 @@ function showLoggedIn(){
 
 function showLoggedOut(){
 
-  document.getElementById("loggedOut").style.display="block";
+  document.getElementById(
+    "loggedOut"
+  ).style.display="block";
 
-  document.getElementById("loggedIn").style.display="none";
+  document.getElementById(
+    "loggedIn"
+  ).style.display="none";
+
+  document.getElementById(
+    "dashboard"
+  ).style.display="none";
 
 }
 
 
 function signOut(){
 
-  localStorage.removeItem("bk_access_token");
+  localStorage.removeItem(
+    "bk_access_token"
+  );
 
-  localStorage.removeItem("bk_user");
+  localStorage.removeItem(
+    "bk_user"
+  );
 
   accessToken=null;
 
@@ -673,7 +812,9 @@ function signOut(){
 
   showLoggedOut();
 
-  document.getElementById("ordersList").innerHTML=
+  document.getElementById(
+    "ordersList"
+  ).innerHTML =
     "Connecte-toi pour voir tes commandes.";
 
   message("Déconnexion réussie.");
@@ -681,236 +822,25 @@ function signOut(){
 }
 
 
-function displayProducts(list){
-
-  const container=document.getElementById("products");
-
-  container.innerHTML="";
-
-  list.forEach((product,index)=>{
-
-    container.innerHTML += `
-
-      <div class="product">
-
-        <h3>${product.name}</h3>
-
-        <div class="price">
-          ${formatPrice(product.price)}
-        </div>
-
-        <div class="stock">
-          Stock : ${product.stock}
-        </div>
-
-        <button
-          onclick="orderProduct('${product.name.replace(/'/g,"\\'")}',${product.price})">
-
-          Commander
-
-        </button>
-
-      </div>
-
-    `;
-
-  });
-
-}
-
-
-function filterProducts(category,button){
-
-  currentCategory=category;
-
-  document
-    .querySelectorAll(".categories button")
-    .forEach(btn=>btn.classList.remove("active"));
-
-  button.classList.add("active");
-
-  const filtered =
-    category==="Tout"
-    ? products
-    : products.filter(
-        product=>product.category===category
-      );
-
-  displayProducts(filtered);
-
-}
-
-
-function searchProducts(){
-
-  const search =
-    document
-      .getElementById("searchInput")
-      .value
-      .toLowerCase();
-
-  let filtered =
-    products.filter(product =>
-      product.name.toLowerCase().includes(search)
-    );
-
-  if(currentCategory!=="Tout"){
-
-    filtered=filtered.filter(product =>
-      product.category===currentCategory
-    );
-
-  }
-
-  displayProducts(filtered);
-
-}
-
-
-async function orderProduct(name,price){
-
-  if(!accessToken || !currentUser){
-
-    alert(
-      "Connecte-toi ou crée ton compte vendeur avant de commander."
-    );
-
-    return;
-
-  }
-
-  const buttons =
-    document.querySelectorAll(".product button");
-
-  buttons.forEach(button=>{
-    button.disabled=true;
-  });
-
-  try{
-
-    const orderId=Date.now();
-
-    const orderResponse = await fetch(
-      SUPABASE_URL + "/rest/v1/orders",
-      {
-        method:"POST",
-
-        headers:{
-          "apikey":SUPABASE_KEY,
-          "Authorization":"Bearer "+accessToken,
-          "Content-Type":"application/json",
-          "Prefer":"return=minimal"
-        },
-
-        body:JSON.stringify({
-
-          id:orderId,
-
-          user_id:currentUser.id,
-
-          total:price,
-
-          status:"pending"
-
-        })
-      }
-    );
-
-    if(!orderResponse.ok){
-
-      throw new Error(
-        await orderResponse.text()
-      );
-
-    }
-
-    const itemResponse = await fetch(
-      SUPABASE_URL + "/rest/v1/order_items",
-      {
-        method:"POST",
-
-        headers:{
-          "apikey":SUPABASE_KEY,
-          "Authorization":"Bearer "+accessToken,
-          "Content-Type":"application/json",
-          "Prefer":"return=minimal"
-        },
-
-        body:JSON.stringify({
-
-          order_id:orderId,
-
-          product_id:null,
-
-          quantity:1,
-
-          price:price,
-
-          product_name:name
-
-        })
-      }
-    );
-
-    if(!itemResponse.ok){
-
-      throw new Error(
-        await itemResponse.text()
-      );
-
-    }
-
-    alert(
-      "Commande "+name+
-      " enregistrée avec succès dans BK House."
-    );
-
-    await loadOrders();
-
-  }catch(error){
-
-    console.error(error);
-
-    alert("ERREUR : "+error.message);
-
-  }finally{
-
-    buttons.forEach(button=>{
-      button.disabled=false;
-    });
-
-  }
-
-}
-
-
-async function loadOrders(){
-
-  const ordersList =
-    document.getElementById("ordersList");
-
-  if(!accessToken || !currentUser){
-
-    ordersList.innerHTML=
-      "Connecte-toi pour voir tes commandes.";
-
-    return;
-
-  }
+/* =========================
+   PRODUITS SUPABASE
+========================= */
+
+async function loadProducts(){
 
   try{
 
     const response = await fetch(
 
       SUPABASE_URL +
-      "/rest/v1/orders?user_id=eq."+
-      currentUser.id+
-      "&select=*&order=id.desc",
+      "/rest/v1/products?select=*&order=id.asc",
 
       {
         headers:{
           "apikey":SUPABASE_KEY,
-          "Authorization":"Bearer "+accessToken
+          ...(accessToken
+            ? {"Authorization":"Bearer "+accessToken}
+            : {})
         }
       }
 
@@ -924,113 +854,378 @@ async function loadOrders(){
 
     }
 
-    const orders=await response.json();
+    products =
+      await response.json();
 
-    if(orders.length===0){
-
-      ordersList.innerHTML=
-        "Aucune commande pour le moment.";
-
-      return;
-
-    }
-
-    const itemsResponse = await fetch(
-
-      SUPABASE_URL +
-      "/rest/v1/order_items?select=*",
-
-      {
-        headers:{
-          "apikey":SUPABASE_KEY,
-          "Authorization":"Bearer "+accessToken
-        }
-      }
-
+    displayProducts(
+      getFilteredProducts()
     );
-
-    if(!itemsResponse.ok){
-
-      throw new Error(
-        await itemsResponse.text()
-      );
-
-    }
-
-    const items=await itemsResponse.json();
-
-    ordersList.innerHTML = orders.map(order=>{
-
-      const item=items.find(
-        item =>
-          Number(item.order_id) === Number(order.id)
-      );
-
-      return `
-
-        <div style="
-          border:1px solid #ddd;
-          border-radius:8px;
-          padding:12px;
-          margin-bottom:10px;
-        ">
-
-          <strong>
-            Commande #${order.id}
-          </strong><br>
-
-          Produit :
-          ${item ? item.product_name : "Produit"}
-          <br>
-
-          Quantité :
-          ${item ? item.quantity : 1}
-          <br>
-
-          Montant :
-          ${formatPrice(Number(order.total)||0)}
-          <br>
-
-          Statut :
-          ${order.status || "pending"}
-
-        </div>
-
-      `;
-
-    }).join("");
 
   }catch(error){
 
     console.error(error);
 
-    ordersList.innerHTML=
-      "Impossible de charger les commandes.";
+    document.getElementById(
+      "products"
+    ).innerHTML =
+
+      "<p style='padding:15px'>"+
+      "Impossible de charger les produits."+
+      "</p>";
 
   }
 
 }
 
 
-/* DÉMARRAGE */
+function getFilteredProducts(){
 
-displayProducts(products);
+  let result =
+    products;
 
-if(accessToken && currentUser){
+  if(currentCategory !== "Tout"){
 
-  showLoggedIn();
+    result =
+      result.filter(product =>
+        product.category === currentCategory
+      );
 
-  loadProfile();
+  }
 
-  loadOrders();
+  const search =
+    document
+      .getElementById("searchInput")
+      .value
+      .trim()
+      .toLowerCase();
 
-}else{
+  if(search){
 
-  showLoggedOut();
+    result =
+      result.filter(product =>
+        String(product.name || "")
+          .toLowerCase()
+          .includes(search)
+      );
+
+  }
+
+  return result;
 
 }
 
-</script>
 
-</body>
-</html>
+function displayProducts(list){
+
+  const container =
+    document.getElementById("products");
+
+  container.innerHTML="";
+
+  if(list.length===0){
+
+    container.innerHTML =
+      "<p style='padding:10px'>"+
+      "Aucun article trouvé."+
+      "</p>";
+
+    return;
+
+  }
+
+  list.forEach(product=>{
+
+    const stock =
+      Number(product.stock) || 0;
+
+    const price =
+      Number(product.price) || 0;
+
+    const points =
+      Number(product.points) || 0;
+
+    const disabled =
+      stock <= 0 ? "disabled" : "";
+
+    const buttonText =
+      stock <= 0
+      ? "Rupture de stock"
+      : "Commander";
+
+    container.innerHTML += `
+
+      <div class="product">
+
+        <h3>
+          ${escapeHtml(product.name || "Produit")}
+        </h3>
+
+        <div class="price">
+          ${formatPrice(price)}
+        </div>
+
+        <div class="stock">
+          Stock : ${stock}
+        </div>
+
+        <div class="points">
+          +${points} point${points > 1 ? "s" : ""}
+        </div>
+
+        <button
+          ${disabled}
+          onclick="orderProduct(
+            ${Number(product.id)},
+            '${escapeJs(product.name || "Produit")}'
+          )">
+
+          ${buttonText}
+
+        </button>
+
+      </div>
+
+    `;
+
+  });
+
+}
+
+
+function escapeHtml(text){
+
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeJs(text){
+
+  return String(text)
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'")
+    .replace(/\n/g,"\\n")
+    .replace(/\r/g,"\\r");
+
+}
+
+
+/* =========================
+   FILTRES
+========================= */
+
+function filterProducts(category,button){
+
+  currentCategory =
+    category;
+
+  document
+    .querySelectorAll(".categories button")
+    .forEach(btn =>
+      btn.classList.remove("active")
+    );
+
+  button.classList.add("active");
+
+  displayProducts(
+    getFilteredProducts()
+  );
+
+}
+
+
+function searchProducts(){
+
+  displayProducts(
+    getFilteredProducts()
+  );
+
+}
+
+
+/* =========================
+   COMMANDER
+========================= */
+
+async function orderProduct(productId,name){
+
+  if(!accessToken || !currentUser){
+
+    alert(
+      "Connecte-toi ou crée ton compte vendeur avant de commander."
+    );
+
+    return;
+
+  }
+
+  const product =
+    products.find(
+      p => Number(p.id) === Number(productId)
+    );
+
+  if(!product){
+
+    alert("Produit introuvable.");
+
+    return;
+
+  }
+
+  const stock =
+    Number(product.stock) || 0;
+
+  const price =
+    Number(product.price) || 0;
+
+  const points =
+    Number(product.points) || 0;
+
+  if(stock <= 0){
+
+    alert("Ce produit est en rupture de stock.");
+
+    return;
+
+  }
+
+  const buttons =
+    document.querySelectorAll(
+      ".product button"
+    );
+
+  buttons.forEach(button=>{
+    button.disabled=true;
+  });
+
+  try{
+
+    /*
+      On utilise un identifiant numérique
+      comme dans ta table orders.
+    */
+
+    const orderId =
+      Date.now();
+
+    /* =========================
+       1. CREER LA COMMANDE
+    ========================= */
+
+    const orderResponse =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/order,
+        {
+          method:"POST",
+
+          headers:{
+            ...authHeaders(),
+            "Prefer":"return=minimal"
+          },
+
+          body:JSON.stringify({
+
+            id:orderId,
+
+            user_id:currentUser.id,
+
+            total:price,
+
+            status:"pending"
+
+          })
+        }
+      );
+
+    if(!orderResponse.ok){
+
+      throw new Error(
+        "Commande : "+
+        await orderResponse.text()
+      );
+
+    }
+
+
+    /* =========================
+       2. AJOUTER LE PRODUIT
+       DANS ORDER ITEMS
+    ========================= */
+
+    const itemResponse =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/order_items",
+        {
+          method:"POST",
+
+          headers:{
+            ...authHeaders(),
+            "Prefer":"return=minimal"
+          },
+
+          body:JSON.stringify({
+
+            order_id:orderId,
+
+            product_id:Number(product.id),
+
+            quantity:1,
+
+            price:price,
+
+            product_name:name
+
+          })
+        }
+      );
+
+    if(!itemResponse.ok){
+
+      throw new Error(
+        "Article de commande : "+
+        await itemResponse.text()
+      );
+
+    }
+
+
+    /* =========================
+       3. DIMINUER LE STOCK
+    ========================= */
+
+    const newStock =
+      stock - 1;
+
+    const stockResponse =
+      await fetch(
+
+        SUPABASE_URL +
+        "/rest/v1/products?id=eq."+
+        product.id,
+
+        {
+          method:"PATCH",
+
+          headers:{
+            ...authHeaders(),
+            "Prefer":"return=minimal"
+          },
+
+          body:JSON.stringify({
+
+            stock:newStock
+
+          })
+        }
+
+      );
+
+    if(!stockResponse.ok){
+  
