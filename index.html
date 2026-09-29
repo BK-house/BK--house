@@ -22,23 +22,11 @@ header{
   text-align:center;
 }
 
-.logo{
-  font-size:32px;
-  font-weight:bold;
-}
+.logo{font-size:32px;font-weight:bold}
+.brand{font-size:22px;font-weight:bold;margin-top:4px}
+.slogan{font-size:14px;margin-top:5px}
 
-.brand{
-  font-size:22px;
-  font-weight:bold;
-  margin-top:4px;
-}
-
-.slogan{
-  font-size:14px;
-  margin-top:5px;
-}
-
-.account{
+.account,.dashboard{
   background:white;
   margin:15px;
   padding:15px;
@@ -46,7 +34,7 @@ header{
   box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.account h2{
+.account h2,.dashboard h2{
   margin-top:0;
   color:#1769aa;
 }
@@ -69,6 +57,7 @@ header{
   color:white;
   font-size:15px;
   margin-top:5px;
+  cursor:pointer;
 }
 
 .logout{
@@ -78,19 +67,6 @@ header{
 #accountMessage{
   margin-top:10px;
   font-size:14px;
-}
-
-.dashboard{
-  background:white;
-  margin:15px;
-  padding:15px;
-  border-radius:10px;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.dashboard h2{
-  color:#1769aa;
-  margin-top:0;
 }
 
 .goalBox{
@@ -235,20 +211,35 @@ footer{
   <div class="slogan">La signature du bon goût</div>
 </header>
 
-<!-- COMPTE VENDEUR -->
 <div class="account">
 
   <div id="loggedOut">
 
     <h2>Créer mon compte vendeur</h2>
 
-    <input type="text" id="nameInput" placeholder="Nom et prénom">
+    <input
+      type="text"
+      id="nameInput"
+      placeholder="Nom et prénom"
+    >
 
-    <input type="text" id="phoneInput" placeholder="Numéro WhatsApp">
+    <input
+      type="text"
+      id="phoneInput"
+      placeholder="Numéro WhatsApp"
+    >
 
-    <input type="email" id="emailInput" placeholder="Adresse email">
+    <input
+      type="email"
+      id="emailInput"
+      placeholder="Adresse email"
+    >
 
-    <input type="password" id="passwordInput" placeholder="Mot de passe">
+    <input
+      type="password"
+      id="passwordInput"
+      placeholder="Mot de passe"
+    >
 
     <button onclick="signUp()">
       Créer mon compte
@@ -258,9 +249,17 @@ footer{
 
     <h2>Déjà un compte ?</h2>
 
-    <input type="email" id="loginEmail" placeholder="Adresse email">
+    <input
+      type="email"
+      id="loginEmail"
+      placeholder="Adresse email"
+    >
 
-    <input type="password" id="loginPassword" placeholder="Mot de passe">
+    <input
+      type="password"
+      id="loginPassword"
+      placeholder="Mot de passe"
+    >
 
     <button onclick="signIn()">
       Se connecter
@@ -284,34 +283,41 @@ footer{
 
 </div>
 
-<!-- OBJECTIF -->
-<div class="dashboard" id="dashboard" style="display:none">
+<div
+  class="dashboard"
+  id="dashboard"
+  style="display:none"
+>
 
   <h2>Mon objectif</h2>
 
   <div class="goalBox">
 
-    <div>
-      Ventes aujourd'hui
-    </div>
+    <div>Ventes aujourd'hui</div>
 
-    <div class="goalNumber" id="todaySales">
+    <div
+      class="goalNumber"
+      id="todaySales"
+    >
       0 / 3
     </div>
 
-    <div class="goalMessage" id="goalMessage">
+    <div
+      class="goalMessage"
+      id="goalMessage"
+    >
       Encore 3 ventes pour atteindre ton objectif.
     </div>
 
     <div style="margin-top:12px">
-      Points : <strong id="dashboardPoints">0</strong>
+      Points :
+      <strong id="dashboardPoints">0</strong>
     </div>
 
   </div>
 
 </div>
 
-<!-- RECHERCHE -->
 <div class="search">
 
   <input
@@ -323,36 +329,44 @@ footer{
 
 </div>
 
-<!-- CATEGORIES -->
 <div class="categories">
 
   <button
     class="active"
-    onclick="filterProducts('Tout',this)">
+    onclick="filterProducts('Tout',this)"
+  >
     Tout
   </button>
 
   <button
-    onclick="filterProducts('Homme',this)">
+    onclick="filterProducts('Homme',this)"
+  >
     Homme
   </button>
 
   <button
-    onclick="filterProducts('Femme',this)">
+    onclick="filterProducts('Femme',this)"
+  >
     Femme
   </button>
 
   <button
-    onclick="filterProducts('Accessoires',this)">
+    onclick="filterProducts('Accessoires',this)"
+  >
     Accessoires
   </button>
 
 </div>
 
-<!-- PRODUITS -->
-<div class="products" id="products"></div>
+<div
+  class="products"
+  id="products"
+>
+  <p style="padding:15px">
+    Chargement des produits...
+  </p>
+</div>
 
-<!-- COMMANDES -->
 <div id="ordersSection">
 
   <h2>Mes commandes</h2>
@@ -379,11 +393,15 @@ let accessToken =
 localStorage.getItem("bk_access_token");
 
 let currentUser =
-JSON.parse(localStorage.getItem("bk_user") || "null");
+JSON.parse(
+  localStorage.getItem("bk_user") || "null"
+);
 
 let products = [];
 
 let currentCategory = "Tout";
+
+const DAILY_GOAL = 3;
 
 
 /* =========================
@@ -392,14 +410,21 @@ let currentCategory = "Tout";
 
 function formatPrice(price){
 
-  return Number(price).toLocaleString("fr-FR")+" FCFA";
+  return Number(price)
+    .toLocaleString("fr-FR")
+    +" FCFA";
 
 }
 
 
 function message(text){
 
-  document.getElementById("accountMessage").innerText = text;
+  const box =
+    document.getElementById("accountMessage");
+
+  if(box){
+    box.innerText = text;
+  }
 
 }
 
@@ -407,10 +432,28 @@ function message(text){
 function authHeaders(){
 
   return {
+
     "apikey":SUPABASE_KEY,
-    "Authorization":"Bearer "+accessToken,
-    "Content-Type":"application/json"
+
+    "Authorization":
+      "Bearer "+accessToken,
+
+    "Content-Type":
+      "application/json"
+
   };
+
+}
+
+
+function escapeHtml(text){
+
+  return String(text ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
@@ -422,54 +465,87 @@ function authHeaders(){
 async function signUp(){
 
   const name =
-    document.getElementById("nameInput").value.trim();
+    document
+      .getElementById("nameInput")
+      .value
+      .trim();
 
   const phone =
-    document.getElementById("phoneInput").value.trim();
+    document
+      .getElementById("phoneInput")
+      .value
+      .trim();
 
   const email =
-    document.getElementById("emailInput").value.trim();
+    document
+      .getElementById("emailInput")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("passwordInput").value;
+    document
+      .getElementById("passwordInput")
+      .value;
+
 
   if(!name || !phone || !email || !password){
 
-    message("Remplis tous les champs.");
+    message(
+      "Remplis tous les champs."
+    );
 
     return;
+
   }
 
-  message("Création du compte...");
+
+  if(password.length < 6){
+
+    message(
+      "Le mot de passe doit contenir au moins 6 caractères."
+    );
+
+    return;
+
+  }
+
+
+  message(
+    "Création du compte..."
+  );
+
 
   try{
 
-    const response = await fetch(
-      SUPABASE_URL + "/auth/v1/signup",
-      {
-        method:"POST",
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/auth/v1/signup",
+        {
+          method:"POST",
 
-        headers:{
-          "apikey":SUPABASE_KEY,
-          "Content-Type":"application/json"
-        },
+          headers:{
+            "apikey":SUPABASE_KEY,
+            "Content-Type":
+              "application/json"
+          },
 
-        body:JSON.stringify({
+          body:JSON.stringify({
+            email:email,
+            password:password,
 
-          email:email,
+            data:{
+              name:name,
+              phone:phone
+            }
+          })
+        }
+      );
 
-          password:password,
 
-          data:{
-            name:name,
-            phone:phone
-          }
+    const data =
+      await response.json();
 
-        })
-      }
-    );
-
-    const data = await response.json();
 
     if(!response.ok){
 
@@ -482,6 +558,7 @@ async function signUp(){
 
     }
 
+
     if(data.session){
 
       accessToken =
@@ -490,19 +567,28 @@ async function signUp(){
       currentUser =
         data.user;
 
+
       localStorage.setItem(
         "bk_access_token",
         accessToken
       );
+
 
       localStorage.setItem(
         "bk_user",
         JSON.stringify(currentUser)
       );
 
-      await saveProfile(name,phone);
+
+      await saveProfile(
+        name,
+        phone
+      );
+
 
       showLoggedIn();
+
+      await loadProfile();
 
       await loadProducts();
 
@@ -510,7 +596,10 @@ async function signUp(){
 
       await updateDashboard();
 
-      message("Compte créé avec succès !");
+
+      message(
+        "Compte créé avec succès !"
+      );
 
     }else{
 
@@ -524,7 +613,9 @@ async function signUp(){
 
     console.error(error);
 
-    message("ERREUR : "+error.message);
+    message(
+      "ERREUR : "+error.message
+    );
 
   }
 
@@ -538,41 +629,57 @@ async function signUp(){
 async function signIn(){
 
   const email =
-    document.getElementById("loginEmail").value.trim();
+    document
+      .getElementById("loginEmail")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("loginPassword").value;
+    document
+      .getElementById("loginPassword")
+      .value;
+
 
   if(!email || !password){
 
-    message("Entre ton email et ton mot de passe.");
+    message(
+      "Entre ton email et ton mot de passe."
+    );
 
     return;
+
   }
+
 
   message("Connexion...");
 
+
   try{
 
-    const response = await fetch(
-      SUPABASE_URL +
-      "/auth/v1/token?grant_type=password",
-      {
-        method:"POST",
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/auth/v1/token?grant_type=password",
+        {
+          method:"POST",
 
-        headers:{
-          "apikey":SUPABASE_KEY,
-          "Content-Type":"application/json"
-        },
+          headers:{
+            "apikey":SUPABASE_KEY,
+            "Content-Type":
+              "application/json"
+          },
 
-        body:JSON.stringify({
-          email:email,
-          password:password
-        })
-      }
-    );
+          body:JSON.stringify({
+            email:email,
+            password:password
+          })
+        }
+      );
 
-    const data = await response.json();
+
+    const data =
+      await response.json();
+
 
     if(!response.ok){
 
@@ -584,21 +691,25 @@ async function signIn(){
 
     }
 
+
     accessToken =
       data.access_token;
 
     currentUser =
       data.user;
 
+
     localStorage.setItem(
       "bk_access_token",
       accessToken
     );
 
+
     localStorage.setItem(
       "bk_user",
       JSON.stringify(currentUser)
     );
+
 
     showLoggedIn();
 
@@ -610,13 +721,19 @@ async function signIn(){
 
     await updateDashboard();
 
-    message("Connexion réussie !");
+
+    message(
+      "Connexion réussie !"
+    );
+
 
   }catch(error){
 
     console.error(error);
 
-    message("ERREUR : "+error.message);
+    message(
+      "ERREUR : "+error.message
+    );
 
   }
 
@@ -627,42 +744,48 @@ async function signIn(){
    PROFIL
 ========================= */
 
-async function saveProfile(name,phone){
+async function saveProfile(
+  name,
+  phone
+){
 
   if(!accessToken || !currentUser){
-
     return;
   }
 
+
   try{
 
-    const response = await fetch(
-      SUPABASE_URL + "/rest/v1/profiles",
-      {
-        method:"POST",
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/profiles",
+        {
+          method:"POST",
 
-        headers:{
-          "apikey":SUPABASE_KEY,
-          "Authorization":"Bearer "+accessToken,
-          "Content-Type":"application/json",
-          "Prefer":"resolution=merge-duplicates"
-        },
+          headers:{
+            ...authHeaders(),
 
-        body:JSON.stringify({
+            "Prefer":
+              "resolution=merge-duplicates,return=minimal"
+          },
 
-          id:currentUser.id,
+          body:JSON.stringify({
 
-          name:name,
+            id:currentUser.id,
 
-          phone:phone,
+            name:name,
 
-          role:"vendeur",
+            phone:phone,
 
-          points:0
+            role:"vendeur",
 
-        })
-      }
-    );
+            points:0
+
+          })
+        }
+      );
+
 
     if(!response.ok){
 
@@ -685,60 +808,82 @@ async function saveProfile(name,phone){
 async function loadProfile(){
 
   if(!accessToken || !currentUser){
-
     return;
   }
 
+
   try{
 
-    const response = await fetch(
+    const response =
+      await fetch(
 
-      SUPABASE_URL +
-      "/rest/v1/profiles?id=eq."+
-      currentUser.id+
-      "&select=*",
+        SUPABASE_URL +
+        "/rest/v1/profiles?id=eq." +
+        encodeURIComponent(
+          currentUser.id
+        ) +
+        "&select=*",
 
-      {
-        headers:{
-          "apikey":SUPABASE_KEY,
-          "Authorization":"Bearer "+accessToken
+        {
+          headers:{
+            "apikey":SUPABASE_KEY,
+
+            "Authorization":
+              "Bearer "+accessToken
+          }
         }
-      }
 
-    );
+      );
+
 
     if(!response.ok){
-
       return;
     }
 
+
     const profiles =
       await response.json();
+
 
     if(profiles.length > 0){
 
       const profile =
         profiles[0];
 
+
       const points =
         Number(profile.points) || 0;
 
-      document.getElementById("userInfo").innerHTML =
 
-        "<strong>"+
-        (profile.name || "Vendeur")+
-        "</strong><br>"+
+      document.getElementById(
+        "userInfo"
+      ).innerHTML =
 
-        "WhatsApp : "+
-        (profile.phone || "Non renseigné")+
-        "<br>"+
+        "<strong>" +
+        escapeHtml(
+          profile.name ||
+          "Vendeur"
+        ) +
+        "</strong><br>" +
 
-        "Points : "+
+        "WhatsApp : " +
+
+        escapeHtml(
+          profile.phone ||
+          "Non renseigné"
+        ) +
+
+        "<br>" +
+
+        "Points : " +
+
         points;
+
 
       document.getElementById(
         "dashboardPoints"
-      ).innerText = points;
+      ).innerText =
+        points;
 
     }
 
@@ -751,19 +896,26 @@ async function loadProfile(){
 }
 
 
+/* =========================
+   AFFICHAGE COMPTE
+========================= */
+
 function showLoggedIn(){
 
   document.getElementById(
     "loggedOut"
-  ).style.display="none";
+  ).style.display = "none";
+
 
   document.getElementById(
     "loggedIn"
-  ).style.display="block";
+  ).style.display = "block";
+
 
   document.getElementById(
     "dashboard"
-  ).style.display="block";
+  ).style.display = "block";
+
 
   if(currentUser){
 
@@ -771,8 +923,11 @@ function showLoggedIn(){
       "userInfo"
     ).innerHTML =
 
-      "<strong>Compte connecté</strong><br>"+
-      currentUser.email;
+      "<strong>Compte connecté</strong><br>" +
+
+      escapeHtml(
+        currentUser.email || ""
+      );
 
   }
 
@@ -783,15 +938,17 @@ function showLoggedOut(){
 
   document.getElementById(
     "loggedOut"
-  ).style.display="block";
+  ).style.display = "block";
+
 
   document.getElementById(
     "loggedIn"
-  ).style.display="none";
+  ).style.display = "none";
+
 
   document.getElementById(
     "dashboard"
-  ).style.display="none";
+  ).style.display = "none";
 
 }
 
@@ -806,45 +963,84 @@ function signOut(){
     "bk_user"
   );
 
-  accessToken=null;
 
-  currentUser=null;
+  accessToken = null;
+
+  currentUser = null;
+
 
   showLoggedOut();
+
 
   document.getElementById(
     "ordersList"
   ).innerHTML =
     "Connecte-toi pour voir tes commandes.";
 
-  message("Déconnexion réussie.");
+
+  document.getElementById(
+    "todaySales"
+  ).innerText =
+    "0 / "+DAILY_GOAL;
+
+
+  document.getElementById(
+    "goalMessage"
+  ).innerText =
+    "Encore "+DAILY_GOAL+
+    " ventes pour atteindre ton objectif.";
+
+
+  message(
+    "Déconnexion réussie."
+  );
 
 }
 
 
 /* =========================
-   PRODUITS SUPABASE
+   PRODUITS
 ========================= */
 
 async function loadProducts(){
 
+  const container =
+    document.getElementById(
+      "products"
+    );
+
+
+  container.innerHTML =
+    "<p style='padding:15px'>Chargement des produits...</p>";
+
+
   try{
 
-    const response = await fetch(
+    const headers = {
+      "apikey":SUPABASE_KEY
+    };
 
-      SUPABASE_URL +
-      "/rest/v1/products?select=*&order=id.asc",
 
-      {
-        headers:{
-          "apikey":SUPABASE_KEY,
-          ...(accessToken
-            ? {"Authorization":"Bearer "+accessToken}
-            : {})
+    if(accessToken){
+
+      headers["Authorization"] =
+        "Bearer "+accessToken;
+
+    }
+
+
+    const response =
+      await fetch(
+
+        SUPABASE_URL +
+        "/rest/v1/products?select=*&order=id.asc",
+
+        {
+          headers:headers
         }
-      }
 
-    );
+      );
+
 
     if(!response.ok){
 
@@ -854,23 +1050,33 @@ async function loadProducts(){
 
     }
 
-    products =
+
+    const data =
       await response.json();
+
+
+    products =
+      Array.isArray(data)
+      ? data
+      : [];
+
 
     displayProducts(
       getFilteredProducts()
     );
 
+
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "Erreur produits :",
+      error
+    );
 
-    document.getElementById(
-      "products"
-    ).innerHTML =
 
-      "<p style='padding:15px'>"+
-      "Impossible de charger les produits."+
+    container.innerHTML =
+      "<p style='padding:15px'>" +
+      "Impossible de charger les produits." +
       "</p>";
 
   }
@@ -881,34 +1087,52 @@ async function loadProducts(){
 function getFilteredProducts(){
 
   let result =
-    products;
+    [...products];
+
 
   if(currentCategory !== "Tout"){
 
     result =
-      result.filter(product =>
-        product.category === currentCategory
+      result.filter(
+        product =>
+
+          String(
+            product.category || ""
+          ).toLowerCase() ===
+
+          currentCategory.toLowerCase()
+
       );
 
   }
 
+
   const search =
     document
-      .getElementById("searchInput")
+      .getElementById(
+        "searchInput"
+      )
       .value
       .trim()
       .toLowerCase();
 
+
   if(search){
 
     result =
-      result.filter(product =>
-        String(product.name || "")
+      result.filter(
+        product =>
+
+          String(
+            product.name || ""
+          )
           .toLowerCase()
           .includes(search)
+
       );
 
   }
+
 
   return result;
 
@@ -918,99 +1142,91 @@ function getFilteredProducts(){
 function displayProducts(list){
 
   const container =
-    document.getElementById("products");
+    document.getElementById(
+      "products"
+    );
 
-  container.innerHTML="";
 
-  if(list.length===0){
+  container.innerHTML = "";
+
+
+  if(!list.length){
 
     container.innerHTML =
-      "<p style='padding:10px'>"+
-      "Aucun article trouvé."+
+      "<p style='padding:10px'>" +
+      "Aucun article trouvé." +
       "</p>";
 
     return;
 
   }
 
-  list.forEach(product=>{
 
-    const stock =
-      Number(product.stock) || 0;
+  list.forEach(
+    product => {
 
-    const price =
-      Number(product.price) || 0;
+      const stock =
+        Number(product.stock) || 0;
 
-    const points =
-      Number(product.points) || 0;
 
-    const disabled =
-      stock <= 0 ? "disabled" : "";
+      const price =
+        Number(product.price) || 0;
 
-    const buttonText =
-      stock <= 0
-      ? "Rupture de stock"
-      : "Commander";
 
-    container.innerHTML += `
+      const points =
+        Number(product.points) || 0;
 
-      <div class="product">
 
-        <h3>
-          ${escapeHtml(product.name || "Produit")}
-        </h3>
+      const disabled =
+        stock <= 0
+        ? "disabled"
+        : "";
 
-        <div class="price">
-          ${formatPrice(price)}
+
+      const buttonText =
+        stock <= 0
+        ? "Rupture de stock"
+        : "Commander";
+
+
+      container.innerHTML += `
+
+        <div class="product">
+
+          <h3>
+            ${escapeHtml(
+              product.name ||
+              "Produit"
+            )}
+          </h3>
+
+          <div class="price">
+            ${formatPrice(price)}
+          </div>
+
+          <div class="stock">
+            Stock : ${stock}
+          </div>
+
+          <div class="points">
+            +${points}
+            point${points > 1 ? "s" : ""}
+          </div>
+
+          <button
+            data-product-id="${Number(product.id)}"
+            ${disabled}
+            onclick="orderProduct(${Number(product.id)})"
+          >
+            ${buttonText}
+          </button>
+
         </div>
 
-        <div class="stock">
-          Stock : ${stock}
-        </div>
+      `;
 
-        <div class="points">
-          +${points} point${points > 1 ? "s" : ""}
-        </div>
-
-        <button
-          ${disabled}
-          onclick="orderProduct(
-            ${Number(product.id)},
-            '${escapeJs(product.name || "Produit")}'
-          )">
-
-          ${buttonText}
-
-        </button>
-
-      </div>
-
-    `;
-
-  });
-
-}
-
-
-function escapeHtml(text){
-
-  return String(text)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-function escapeJs(text){
-
-  return String(text)
-    .replace(/\\/g,"\\\\")
-    .replace(/'/g,"\\'")
-    .replace(/\n/g,"\\n")
-    .replace(/\r/g,"\\r");
+    }
+  );
 
 }
 
@@ -1019,18 +1235,31 @@ function escapeJs(text){
    FILTRES
 ========================= */
 
-function filterProducts(category,button){
+function filterProducts(
+  category,
+  button
+){
 
   currentCategory =
     category;
 
+
   document
-    .querySelectorAll(".categories button")
-    .forEach(btn =>
-      btn.classList.remove("active")
+    .querySelectorAll(
+      ".categories button"
+    )
+    .forEach(
+      btn =>
+        btn.classList.remove(
+          "active"
+        )
     );
 
-  button.classList.add("active");
+
+  button.classList.add(
+    "active"
+  );
+
 
   displayProducts(
     getFilteredProducts()
@@ -1052,9 +1281,14 @@ function searchProducts(){
    COMMANDER
 ========================= */
 
-async function orderProduct(productId,name){
+async function orderProduct(
+  productId
+){
 
-  if(!accessToken || !currentUser){
+  if(
+    !accessToken ||
+    !currentUser
+  ){
 
     alert(
       "Connecte-toi ou crée ton compte vendeur avant de commander."
@@ -1064,168 +1298,674 @@ async function orderProduct(productId,name){
 
   }
 
+
   const product =
     products.find(
-      p => Number(p.id) === Number(productId)
+      p =>
+        Number(p.id) ===
+        Number(productId)
     );
+
 
   if(!product){
 
-    alert("Produit introuvable.");
+    alert(
+      "Produit introuvable."
+    );
 
     return;
 
   }
+
 
   const stock =
     Number(product.stock) || 0;
 
+
   const price =
     Number(product.price) || 0;
+
 
   const points =
     Number(product.points) || 0;
 
+
   if(stock <= 0){
 
-    alert("Ce produit est en rupture de stock.");
+    alert(
+      "Ce produit est en rupture de stock."
+    );
 
     return;
 
   }
 
-  const buttons =
-    document.querySelectorAll(
+
+  document
+    .querySelectorAll(
       ".product button"
+    )
+    .forEach(
+      button =>
+        button.disabled = true
     );
 
-  buttons.forEach(button=>{
-    button.disabled=true;
-  });
 
   try{
-
-    /*
-      On utilise un identifiant numérique
-      comme dans ta table orders.
-    */
 
     const orderId =
       Date.now();
 
-    /* =========================
-       1. CREER LA COMMANDE
-    ========================= */
+
+    /* 1. CREER LA COMMANDE */
 
     const orderResponse =
       await fetch(
+
         SUPABASE_URL +
-        "/rest/v1/order,
+        "/rest/v1/orders",
+
         {
           method:"POST",
 
           headers:{
             ...authHeaders(),
-            "Prefer":"return=minimal"
+
+            "Prefer":
+              "return=minimal"
           },
 
           body:JSON.stringify({
 
             id:orderId,
 
-            user_id:currentUser.id,
+            user_id:
+              currentUser.id,
 
-            total:price,
+            total:
+              price,
 
-            status:"pending"
+            status:
+              "pending"
 
           })
         }
+
       );
+
 
     if(!orderResponse.ok){
 
       throw new Error(
-        "Commande : "+
+        "Commande : " +
         await orderResponse.text()
       );
 
     }
 
 
-    /* =========================
-       2. AJOUTER LE PRODUIT
-       DANS ORDER ITEMS
-    ========================= */
+    /* 2. AJOUTER L'ARTICLE */
 
     const itemResponse =
       await fetch(
+
         SUPABASE_URL +
         "/rest/v1/order_items",
+
         {
           method:"POST",
 
           headers:{
             ...authHeaders(),
-            "Prefer":"return=minimal"
+
+            "Prefer":
+              "return=minimal"
           },
 
           body:JSON.stringify({
 
-            order_id:orderId,
+            order_id:
+              orderId,
 
-            product_id:Number(product.id),
+            product_id:
+              Number(product.id),
 
-            quantity:1,
+            quantity:
+              1,
 
-            price:price,
-
-            product_name:name
+            price:
+              price
 
           })
         }
+
       );
+
 
     if(!itemResponse.ok){
 
       throw new Error(
-        "Article de commande : "+
+        "Article de commande : " +
         await itemResponse.text()
       );
 
     }
 
 
-    /* =========================
-       3. DIMINUER LE STOCK
-    ========================= */
+    /* 3. DIMINUER LE STOCK */
 
     const newStock =
-      stock - 1;
+      Math.max(
+        0,
+        stock - 1
+      );
+
 
     const stockResponse =
       await fetch(
 
         SUPABASE_URL +
-        "/rest/v1/products?id=eq."+
-        product.id,
+        "/rest/v1/products?id=eq." +
+        encodeURIComponent(
+          product.id
+        ),
 
         {
           method:"PATCH",
 
           headers:{
             ...authHeaders(),
-            "Prefer":"return=minimal"
+
+            "Prefer":
+              "return=minimal"
           },
 
           body:JSON.stringify({
 
-            stock:newStock
+            stock:
+              newStock
 
           })
         }
 
       );
 
+
     if(!stockResponse.ok){
-  
+
+      throw new Error(
+        "Stock : " +
+        await stockResponse.text()
+      );
+
+    }
+
+
+    /* 4. AJOUTER LES POINTS AU VENDEUR */
+
+    if(points > 0){
+
+      const profileResponse =
+        await fetch(
+
+          SUPABASE_URL +
+          "/rest/v1/profiles?id=eq." +
+          encodeURIComponent(
+            currentUser.id
+          ),
+
+          {
+            headers:{
+              "apikey":SUPABASE_KEY,
+
+              "Authorization":
+                "Bearer "+accessToken
+            }
+          }
+
+        );
+
+
+      if(profileResponse.ok){
+
+        const profileData =
+          await profileResponse.json();
+
+
+        if(profileData.length > 0){
+
+          const currentPoints =
+            Number(
+              profileData[0].points
+            ) || 0;
+
+
+          const newPoints =
+            currentPoints + points;
+
+
+          const pointsResponse =
+            await fetch(
+
+              SUPABASE_URL +
+              "/rest/v1/profiles?id=eq." +
+              encodeURIComponent(
+                currentUser.id
+              ),
+
+              {
+                method:"PATCH",
+
+                headers:{
+                  ...authHeaders(),
+
+                  "Prefer":
+                    "return=minimal"
+                },
+
+                body:JSON.stringify({
+
+                  points:
+                    newPoints
+
+                })
+              }
+
+            );
+
+
+          if(!pointsResponse.ok){
+
+            console.error(
+              "Points non mis à jour :",
+              await pointsResponse.text()
+            );
+
+          }
+
+        }
+
+      }
+
+    }
+
+
+    /* 5. METTRE À JOUR L'AFFICHAGE */
+
+    product.stock =
+      newStock;
+
+
+    displayProducts(
+      getFilteredProducts()
+    );
+
+
+    await loadOrders();
+
+    await loadProfile();
+
+    await updateDashboard();
+
+
+    message(
+      "Commande enregistrée avec succès !"
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "Erreur commande :",
+      error
+    );
+
+
+    message(
+      "ERREUR : " +
+      error.message
+    );
+
+
+    alert(
+      "La commande n'a pas pu être enregistrée.\n\n" +
+      error.message
+    );
+
+  }finally{
+
+    displayProducts(
+      getFilteredProducts()
+    );
+
+  }
+
+}
+
+
+/* =========================
+   COMMANDES
+========================= */
+
+async function loadOrders(){
+
+  const container =
+    document.getElementById(
+      "ordersList"
+    );
+
+
+  if(
+    !accessToken ||
+    !currentUser
+  ){
+
+    container.innerText =
+      "Connecte-toi pour voir tes commandes.";
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    "Chargement des commandes...";
+
+
+  try{
+
+    const response =
+      await fetch(
+
+        SUPABASE_URL +
+        "/rest/v1/orders?user_id=eq." +
+        encodeURIComponent(
+          currentUser.id
+        ) +
+        "&select=*&order=id.desc",
+
+        {
+          headers:{
+            "apikey":SUPABASE_KEY,
+
+            "Authorization":
+              "Bearer "+accessToken
+          }
+        }
+
+      );
+
+
+    if(!response.ok){
+
+      throw new Error(
+        await response.text()
+      );
+
+    }
+
+
+    const orders =
+      await response.json();
+
+
+    if(!orders.length){
+
+      container.innerHTML =
+        "<p>Aucune commande pour le moment.</p>";
+
+      return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    orders.forEach(
+      order => {
+
+        const total =
+          Number(order.total) || 0;
+
+
+        const status =
+          order.status ||
+          "pending";
+
+
+        const date =
+          new Date(
+            Number(order.id)
+          );
+
+
+        const dateText =
+          isNaN(date.getTime())
+          ? ""
+          : date.toLocaleString(
+              "fr-FR"
+            );
+
+
+        container.innerHTML += `
+
+          <div class="orderCard">
+
+            <strong>
+              Commande #${escapeHtml(order.id)}
+            </strong>
+
+            <br>
+
+            Total :
+            <strong>
+              ${formatPrice(total)}
+            </strong>
+
+            <br>
+
+            Statut :
+            ${escapeHtml(status)}
+
+            <br>
+
+            <small>
+              ${escapeHtml(dateText)}
+            </small>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "Erreur commandes :",
+      error
+    );
+
+
+    container.innerHTML =
+      "<p>Impossible de charger les commandes.</p>";
+
+  }
+
+}
+
+
+/* =========================
+   OBJECTIF DU JOUR
+========================= */
+
+async function updateDashboard(){
+
+  if(
+    !accessToken ||
+    !currentUser
+  ){
+
+    return;
+
+  }
+
+
+  try{
+
+    const start =
+      new Date();
+
+    start.setHours(
+      0,0,0,0
+    );
+
+
+    const end =
+      new Date();
+
+    end.setHours(
+      23,59,59,999
+    );
+
+
+    const response =
+      await fetch(
+
+        SUPABASE_URL +
+        "/rest/v1/orders?user_id=eq." +
+        encodeURIComponent(
+          currentUser.id
+        ) +
+        "&id=gte." +
+        start.getTime() +
+        "&id=lte." +
+        end.getTime() +
+        "&select=id",
+
+        {
+          headers:{
+            "apikey":SUPABASE_KEY,
+
+            "Authorization":
+              "Bearer "+accessToken
+          }
+        }
+
+      );
+
+
+    if(!response.ok){
+
+      return;
+
+    }
+
+
+    const orders =
+      await response.json();
+
+
+    const sales =
+      Array.isArray(orders)
+      ? orders.length
+      : 0;
+
+
+    document.getElementById(
+      "todaySales"
+    ).innerText =
+      sales +
+      " / " +
+      DAILY_GOAL;
+
+
+    const remaining =
+      Math.max(
+        0,
+        DAILY_GOAL - sales
+      );
+
+
+    const goalMessage =
+      document.getElementById(
+        "goalMessage"
+      );
+
+
+    if(sales >= DAILY_GOAL){
+
+      goalMessage.innerText =
+        "Objectif du jour atteint ! Bravo 🎉";
+
+    }else{
+
+      goalMessage.innerText =
+        "Encore " +
+        remaining +
+        " vente" +
+        (remaining > 1 ? "s" : "") +
+        " pour atteindre ton objectif.";
+
+    }
+
+
+  }catch(error){
+
+    console.error(
+      "Erreur objectif :",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================
+   INITIALISATION
+========================= */
+
+async function init(){
+
+  if(
+    accessToken &&
+    currentUser
+  ){
+
+    showLoggedIn();
+
+    await loadProfile();
+
+  }else{
+
+    showLoggedOut();
+
+  }
+
+
+  await loadProducts();
+
+  await loadOrders();
+
+  await updateDashboard();
+
+}
+
+
+/* =========================
+   LANCEMENT
+========================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  init
+);
+
+</script>
+
+</body>
+</html>
