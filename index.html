@@ -389,7 +389,7 @@ async function loadOrders(){
     ordersList.innerHTML = orders.map(order => {
 
       const item = items.find(
-        item => String(item.order_id) === String(order.id)
+        item => Number(item.order_id) === Number(order.id)
       );
 
       return `
@@ -402,7 +402,7 @@ async function loadOrders(){
           <strong>Commande #${order.id}</strong><br>
           Produit : ${item ? item.product_name : "Produit"}<br>
           Quantité : ${item ? item.quantity : 1}<br>
-          Montant : ${formatPrice(order.total)}<br>
+          Montant : ${formatPrice(Number(order.total) || 0)}<br>
           Statut : ${order.status || "pending"}
         </div>
       `;
