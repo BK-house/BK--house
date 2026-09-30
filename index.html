@@ -1433,13 +1433,16 @@ async function orderProduct(
             quantity:
               1,
 
-            price:
-              price
+                        price:
+              price,
+
+            product_name:
+              product.name
 
           })
+
         }
 
-      );
 
 
     if(!itemResponse.ok){
