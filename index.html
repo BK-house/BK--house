@@ -1487,3 +1487,91 @@ async function orderProduct(
 
           })
        
+      if(!stockResponse.ok){
+
+        throw new Error(
+          "Stock : " +
+          await stockResponse.text()
+        );
+
+      }
+
+
+      product.stock = newStock;
+
+
+      /* 4. AJOUTER LES POINTS */
+
+      if(points > 0){
+
+        const pointsResponse =
+          await fetch(
+            SUPABASE_URL +
+            "/rest/v1/profiles?id=eq." +
+            encodeURIComponent(
+              currentUser.id
+            ),
+
+            {
+              method:"PATCH",
+
+              headers:{
+                ...authHeaders(),
+                "Prefer":
+                  "return=minimal"
+              },
+
+              body:JSON.stringify({
+
+                points:
+                  points
+
+              })
+            }
+          );
+
+
+        if(!pointsResponse.ok){
+
+          console.error(
+            "Points non mis à jour :",
+            await pointsResponse.text()
+          );
+
+        }
+
+      }
+
+
+      alert(
+        "Commande enregistrée avec succès !"
+      );
+
+
+      await loadProducts();
+      await loadOrders();
+      await loadProfile();
+      await updateDashboard();
+
+
+  }catch(error){
+
+    console.error(
+      "Erreur commande :",
+      error
+    );
+
+    alert(
+      "Impossible d'enregistrer la commande : " +
+      error.message
+    );
+
+  }finally{
+
+    displayProducts(
+      getFilteredProducts()
+    );
+
+  }
+
+  }
